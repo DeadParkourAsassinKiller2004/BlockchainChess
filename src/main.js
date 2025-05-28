@@ -1,6 +1,8 @@
 // truffle migrate
 // npm run dev
 
+// Я закончил диплом!!!
+
 import BlockchainModule from './BlockchainModule';
 
 let gameBoard = document.querySelector("#gameboard");
