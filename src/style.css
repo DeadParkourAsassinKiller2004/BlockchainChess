@@ -1,0 +1,185 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+#messages {
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+#messages li {
+  list-style: none;
+  padding: 5px 0;
+}
+.form-group {
+  margin: 10px 0;
+}
+
+#gameboard {
+  width: 640px;
+  height: 640px;
+  background-color: black;
+  display: flex;
+  flex-wrap: wrap;
+  border: 3px solid black;
+  border-radius: 3px;
+  margin: 20px auto;
+}
+
+p{
+  font-size: 50px;
+  color: beige;
+}
+
+.square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  width: 80px;
+}
+.rectangle {
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  height: 80px;
+  width: 320px;
+  background-color: white;
+  opacity: 0.5;
+  border: 3px solid black;
+}
+
+.win {
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 320px;
+  width: 320px;
+}
+
+.winText {
+  width: 100%;
+  text-align: center;
+}
+
+.bigDiv {
+  width: 100%;
+  height: 100%;
+}
+
+.square svg {
+  height: 63px;
+  width: 63px;
+  margin: 10px;
+}
+
+.brown {
+  background-color: #b58863;
+}
+
+.beige {
+  background-color: #f0d9b5;
+}
+
+svg {
+  stroke: black;
+  stroke-width: 20px;
+}
+
+.circle {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: opacity 0.3s ease;
+}
+
+
+
+.attacked {
+  border: 6px solid rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.smoothed {
+  filter: blur(5px);
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+.restart-button {
+  padding: 10px 20px;
+  width: 200px;
+  height: 39px;
+  border-radius: 5px;
+  transition: all 500ms ease;
+}
+
+.restart-button:hover {
+  background: rgb(117, 117, 117);
+  color: #100f0f;
+}
+
+#accountSelect, #recipientAddress, #messageInput {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 300px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#accountSelect:focus, #recipientAddress:focus, #messageInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#sendButton, #startGameButton {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#sendButton:hover, #startGameButton:hover {
+  background-color: #0056b3;
+}
+
+#messages {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 300px;
+  margin: 10px auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+#messages li {
+  padding: 5px 10px;
+  border-bottom: 1px solid #eee;
+}

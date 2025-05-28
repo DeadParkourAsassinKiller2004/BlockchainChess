@@ -1,0 +1,122 @@
+// SPDX-License-Identifier: MIT
+pragma experimental ABIEncoderV2;
+
+contract ChatApp {
+
+    mapping (address => mapping (address => Message[])) public messages;
+
+    struct Message {
+        string message;
+        address from;
+    }
+
+    event messageSentEvent(address indexed from, address indexed to, string message);
+    event etherSentEvent(address indexed from, address indexed to, bool success);
+    event etherAskEvent(address indexed from, address indexed to, string value);
+    event messagesFetchedEvent(address indexed from, address indexed to, Message[] messages);
+
+    // Вспомогательная функция для преобразования символа в число
+    function charToUint(bytes1 char) internal pure returns (uint) {
+        if (char < bytes1("0") || char > bytes1("9")) {
+            revert("Invalid digit");
+        }
+        return uint(uint8(char) - uint8(bytes1("0")));
+    }
+
+    // Вспомогательная функция для парсинга числа из строки
+    function parseNumber(bytes memory str, uint start, uint end) internal pure returns (uint) {
+        uint result = 0;
+        for (uint i = start; i < end; i++) {
+            result = result * 10 + charToUint(str[i]);
+        }
+        return result;
+    }
+
+    // Проверяет, соответствует ли сообщение формату move:XX:YY
+    function isValidMoveFormat(string memory message) internal pure returns (bool) {
+        bytes memory messageBytes = bytes(message);
+        
+        // Проверяем минимальную длину (например, move:0:0 = 8 символов)
+        if (messageBytes.length < 8) {
+            return false;
+        }
+
+        // Проверяем префикс "move"
+        if (
+            messageBytes[0] != bytes1("m") ||
+            messageBytes[1] != bytes1("o") ||
+            messageBytes[2] != bytes1("v") ||
+            messageBytes[3] != bytes1("e") ||
+            messageBytes[4] != bytes1(":")
+        ) {
+            return false;
+        }
+
+        // Находим позиции разделителя ":" для второго числа
+        uint firstColon = 4;
+        uint secondColon = 0;
+        for (uint i = 5; i < messageBytes.length; i++) {
+            if (messageBytes[i] == bytes1(":")) {
+                secondColon = i;
+                break;
+            }
+        }
+        if (secondColon == 0 || secondColon == messageBytes.length - 1) {
+            return false;
+        }
+
+        // Парсим startPos (между move: и вторым :)
+        uint startPos = parseNumber(messageBytes, 5, secondColon);
+        // Парсим endPos (после второго :)
+        uint endPos = parseNumber(messageBytes, secondColon + 1, messageBytes.length);
+
+        // Проверяем диапазон [0, 63]
+        if (startPos > 63 || endPos > 63) {
+            return false;
+        }
+
+        // Проверяем, что startPos и endPos состоят только из цифр
+        for (uint i = 5; i < secondColon; i++) {
+            if (messageBytes[i] < bytes1("0") || messageBytes[i] > bytes1("9")) {
+                return false;
+            }
+        }
+        for (uint i = secondColon + 1; i < messageBytes.length; i++) {
+            if (messageBytes[i] < bytes1("0") || messageBytes[i] > bytes1("9")) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    function sendMsg(address to, string memory message) public {
+        // Проверяем, что сообщение соответствует формату move:XX:YY
+        require(isValidMoveFormat(message), "Message must start with 'move' and contain two indices [0-63]");
+        
+        messages[msg.sender][to].push(Message(message, msg.sender));
+        messages[to][msg.sender].push(Message(message, msg.sender));
+        emit messageSentEvent(msg.sender, to, message);
+    }
+
+    function sendEther(address payable to) public payable {
+        bool sent = to.send(msg.value);
+        emit etherSentEvent(msg.sender, to, sent);
+
+        require(sent, "Failed to send Ether");
+    }
+
+    function askEther(address to, string memory value) public {
+        emit etherAskEvent(msg.sender, to, value);
+    }
+
+    function getAllMsg(address to) public {
+        if (messages[msg.sender][to].length == 0) {
+            emit messagesFetchedEvent(msg.sender, to, messages[to][msg.sender]);
+        }
+        else {
+            emit messagesFetchedEvent(msg.sender, to, messages[msg.sender][to]);
+        }
+    }
+}
