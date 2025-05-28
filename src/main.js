@@ -276,6 +276,7 @@ function rotateBoard() {
 function playMoveSound() {
     const audio = new Audio('moveSound.mp3');
     audio.play();
+    console.log("Hello");
 }
 
 function createBoard() {
