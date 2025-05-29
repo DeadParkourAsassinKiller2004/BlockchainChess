@@ -1,8 +1,6 @@
 // truffle migrate
 // npm run dev
 
-// Я закончил диплом!!!
-
 import BlockchainModule from './BlockchainModule';
 
 let gameBoard = document.querySelector("#gameboard");
@@ -278,7 +276,6 @@ function rotateBoard() {
 function playMoveSound() {
     const audio = new Audio('moveSound.mp3');
     audio.play();
-    console.log("Hello");
 }
 
 function createBoard() {
